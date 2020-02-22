@@ -1,0 +1,35 @@
+version: '3.5'
+
+services:
+  nats:
+    image: 'bitnami/nats:latest'
+    ports:
+      - 4222:4222
+      - 6222:6222
+      - 8222:8222
+    hostname: nats-server
+    networks:
+        - development
+    #volumes:
+    #    - .dev/dockerfiles/nats-server.conf:/opt/bitnami/nats/nats-server.conf
+  redis:
+    image: 'bitnami/redis:5.0'
+    environment:
+        # ALLOW_EMPTY_PASSWORD is recommended only for development.
+        - ALLOW_EMPTY_PASSWORD=yes
+        - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    ports:
+        - 6379:6379
+    volumes:
+        - /tmp/redis_data:/bitnami/redis/data
+    networks:
+        - development
+
+networks:
+  development:
+    driver: bridge
+              
+    
+volumes:
+  redis_data:
+    driver: local
